@@ -51,7 +51,7 @@
 #include <stdarg.h>
 #include <fcntl.h>
 
-/* Syntax highlight types */
+
 #define HL_NORMAL 0
 #define HL_NONPRINT 1
 #define HL_COMMENT 2   /* Single line comment. */
