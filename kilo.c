@@ -36,6 +36,7 @@
 
 #define _BSD_SOURCE
 #define _GNU_SOURCE
+#include <time.h>
 
 #include <termios.h>
 #include <stdlib.h>
