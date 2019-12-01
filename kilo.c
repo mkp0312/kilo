@@ -918,6 +918,140 @@ void editorFind(int fd) {
     }
 }
 
+void editorIndent(void) {
+	int ch, tab_counter=0, i,j, line_changed=0, flag=0,counter=0;
+	ch = getchar();
+	while ( ch != EOF){
+		if ( (ch == '\n') || (ch =='\t')){
+			ch = getchar();
+			continue;
+			flag = 0;
+			}
+			if ( (ch != '}') && (line_changed==1)){
+				putchar('\t');
+				flag = 0;
+				}
+				if ( ch == '{'){
+					putchar('\n');
+					for(j=0; j<tab_counter; j++){
+						putchar('\t');
+					}
+					putchar('{');
+					tab_counter++;
+					putchar('\n');
+					for ( i=0; i <tab_counter;i++){
+					putchar('\t');
+					}
+					ch = getchar();
+					while (( ch == ' ')||(ch == '\n')||(ch=='\t')){
+						ch= getchar();
+					}
+					flag = 1;
+				}
+				else if (ch == '}'){							
+					tab_counter--;
+					putchar('}');
+					putchar('\n');
+					for (i=0; i<(tab_counter-1);i++){
+						putchar('\t');
+					}
+					ch = getchar();
+					while (( ch == ' ')||(ch == '\n')||(ch=='\t')){
+						ch= getchar();
+					}
+					flag = 1;
+				}
+				else if(ch==';'){
+					putchar(';');
+					if ( counter ==0){
+						putchar('\n');
+						for ( i=0; i <(tab_counter-1);i++){	
+							putchar('\t');
+						}
+						ch = getchar();
+						while (( ch == ' ')||(ch == '\n')||(ch=='\t')){
+							ch= getchar();
+						}
+						flag = 1;
+						line_changed=1;
+					}
+					else
+						flag = 0;
+				}
+				else if(ch == '\'' ){	
+					putchar(ch);
+					ch =getchar();
+					if ( ch == '\\'){
+						putchar(ch);
+						ch = getchar();
+						putchar(ch);
+						ch = getchar();
+					}
+					while( ch != '\''){	
+						putchar(ch);
+						ch = getchar();
+					}	
+					putchar(ch);
+					flag = 0;
+				}
+				else if(ch == '\"' ){	
+					putchar(ch);
+					ch =getchar();
+					if ( ch == '\\'){
+						putchar(ch);
+						ch = getchar();
+						putchar(ch);
+						ch = getchar();
+					}
+					while( ch != '\"'){	
+						putchar(ch);
+						ch = getchar();
+						if ( ch == '\\'){
+							putchar(ch);
+							ch = getchar();
+							putchar(ch);
+							ch = getchar();
+						}
+					}
+					putchar(ch);
+					flag = 0;
+				}
+				else if ( ch == '#'){		
+					putchar(ch);
+					while ( ch != '\n'){
+						ch = getchar();
+						putchar(ch);
+					}
+					flag = 0;
+				}
+				else if ( ch == ' '){
+					putchar(ch);
+					ch = getchar();
+						while (( ch == ' ')||(ch == '\n')||(ch=='\t')){
+							ch = getchar();
+						}
+					flag = 1;
+				}
+				else if ( ch == '('){	
+					putchar(ch);
+					counter++;
+					flag=0;
+				}							
+				else if ( ch == ')'){
+					putchar(ch);
+					counter--;
+					flag = 0;
+				}
+				else {
+					putchar(ch);
+					line_changed=0;
+					flag = 0;
+				}
+			if ( flag ==0 )
+				ch = getchar();	
+	}
+}
+
 void editorMoveCursor(int key) {
     int filerow = E.rowoff+E.cy;
     int filecol = E.coloff+E.cx;
@@ -1001,7 +1135,8 @@ void editorProcessKeypress(int fd) {
     case ENTER:  
         editorInsertNewline();
         break;
-    case CTRL_C: 
+    case CTRL_C:
+	editorIndent(); 
         break;
     case CTRL_Q: 
         if (E.dirty && quit_times) {
