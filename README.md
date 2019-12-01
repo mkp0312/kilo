@@ -25,3 +25,4 @@ style CLI.
 Kilo was written by Salvatore Sanfilippo aka antirez and is released
 under the BSD 2 clause license.
 CTRL_H에서기능 추가하면 백스페이스 즉 지우는 역할이 안됨
+testtest
